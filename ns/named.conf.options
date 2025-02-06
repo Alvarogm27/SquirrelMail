@@ -14,8 +14,7 @@ options {
 
     // Configuración de los servidores de reenvío (si utilizas servidores externos para resolver)
     forwarders {
-        8.8.8.8; // Dirección IP de un servidor DNS público (por ejemplo, de Google)
-        8.8.4.4; // Dirección IP de un servidor DNS público adicional (de Google)
+        192.168.57.1
     };
 
     // Configuración de tiempo de espera para resolver
