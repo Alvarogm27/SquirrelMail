@@ -1,0 +1,14 @@
+$TTL 86400
+@    IN    SOA   aula.izv. root.aula.izv. (
+               2025013001 ; Serial
+               3600       ; Refresh (1 hour)
+               1800       ; Retry (30 minutes)
+               1209600    ; Expire (2 weeks)
+               86400 )    ; Minimum TTL (1 day)
+
+@    IN   NS   ns.aula.izv
+
+ns   IN   A    192.168.57.1
+mail IN   A    192.168.57.10
+
+@    IN   MX   10 mail.aula.izv

@@ -1,0 +1,43 @@
+options {
+    // Configuración general de BIND
+    directory "/var/cache/bind"; // Directorio donde BIND guarda los archivos de caché
+
+    // Para permitir la resolución recursiva para cualquier cliente:
+    recursion yes; // Habilitar la recursión para todas las consultas
+
+    // Control de acceso, permitir consultas solo desde ciertas direcciones IP
+    allow-query { any; }; // Permitir consultas desde cualquier dirección IP
+    allow-recursion { any; }; // Permitir recursión desde cualquier dirección IP
+
+    // Resolver de forma segura las solicitudes DNS
+    dnssec-validation auto; // Habilitar validación DNSSEC (seguridad en las consultas DNS)
+
+    // Configuración de los servidores de reenvío (si utilizas servidores externos para resolver)
+    forwarders {
+        8.8.8.8; // Dirección IP de un servidor DNS público (por ejemplo, de Google)
+        8.8.4.4; // Dirección IP de un servidor DNS público adicional (de Google)
+    };
+
+    // Configuración de tiempo de espera para resolver
+    fetch-glue yes; // Habilitar la búsqueda automática de los registros de glue (para registros NS)
+
+    // Opciones de logs
+    logging {
+        channel default_file {
+            file "/var/log/named.log" versions 3 size 5m;
+            severity info;
+            print-time yes;
+            print-severity yes;
+            print-category yes;
+        };
+
+        category default { default_file; };
+    };
+
+    // Habilitar las conexiones con IPv6 si tu red lo soporta
+    listen-on { 127.0.0.1; 192.168.57.100; };  // Escuchar en la interfaz local y en la IP privada
+    listen-on-v6 { none; }; // Deshabilitar IPv6 si no se requiere
+
+    // Para deshabilitar las respuestas no solicitadas de DNS (Ampliar la seguridad)
+    minimal-responses yes;  // Para reducir la cantidad de información que BIND envía
+};
