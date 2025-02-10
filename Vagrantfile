@@ -8,22 +8,54 @@ Vagrant.configure("2") do |config|
     mail.vm.network "private_network", ip: "192.168.57.10"
     mail.vm.provision "shell", inline: <<-SHELL
       apt update && apt upgrade -y
-      #DNS
-      apt install bind9 -y 
-      cp /vagrant/dns/named.conf.local /etc/bind/
-      cp /vagrant/dns/db.aula.izv /etc/bind/
-      cp /vagrant/dns/db.57.168.192 /etc/bind/
-      cp /vagrant/dns/named.conf.options /etc/bind/
+      #Instalar paquetes
 
-      #webmail
-      cp /vagrant/webmail/hostname /etc/hostname
-      cp /vagrant/webmail/hosts /etc/hosts
-      cp /vagrant/webmail/resolv.conf /etc/resolv.conf
-
-      #Dovecot
-      apt install dovecot-core dovecot-imap dovecot-pop3 -y
+      apt-get install bind9 -y
+      apt-get install apache2 -y
+      apt-get install php libapache2-mod-php -y
+      apt-get install dovecot-core dovecot-imapd dovecot-pop3d -y
 
 
-    SHELL
+      #Copiar ficheros DNS
+
+      cp -v /vagrant/dns/named /etc/default/
+      cp -v /vagrant/dns/db.56.168.192 /etc/bind/
+      cp -v /vagrant/dns/db.izv.test /etc/bind/
+      cp -v /vagrant/dns/named.conf.local /etc/bind
+      cp -v /vagrant/dns/named.conf.options /etc/bind
+
+      #Descargar SquirrelMail
+
+
+      tar xvfz /vagrant/webmail/squirrelmail.tgz -C /usr/local
+      ln -s /usr/local/squirrelmail-webmail-1.4.22 /var/www/mail
+      sudo mkdir -p /var/local/squirrelmail/data
+      chown www-data:www-data /var/local/squirrelmail/data
+      mkdir -p /var/local/squirrelmail/attach
+      chown www-data:www-data /var/local/squirrelmail/attach
+      cp -v /vagrant/webmail/config.php /usr/local/squirrelmail-webmail-1.4.22/config/config.php
+      cp -r /usr/local/squirrelmail-webmail-1.4.22/ /var/www/mail/
+
+      #Cambiar el idioma
+      locale-gen es_ES
+
+      #Configirar el webmail
+
+      cp -v /vagrant/webmail/hostname /etc/hostname
+      cp -v /vagrant/webmail/hosts /etc/hosts
+      cp -v /vagrant/webmail/resolv.conf /etc/resolv.conf
+
+      #Configurar Postfix
+
+      cp -v /vagrant/postfix/main.cf /etc/postfix/
+
+      #Configurar apache2 y habilitar modulos
+
+      cp -v /vagrant/apache2/apache2.conf /etc/apache2/apache2.conf
+      cp -v /vagrant/apache2/mail.conf /etc/apache2/sites-available/mail.conf
+      a2ensite mail
+      a2dissite 000-default
+      systemctl restart apache2
+  SHELL
   end
 end
