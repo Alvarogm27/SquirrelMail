@@ -8,7 +8,6 @@ $TTL 86400
 
 @    IN   NS   ns.aula.izv
 
-ns   IN   A    192.168.57.1
 mail IN   A    192.168.57.10
 
 @    IN   MX   10 mail.aula.izv

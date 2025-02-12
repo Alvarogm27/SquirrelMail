@@ -2,19 +2,21 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "debian/bookworm64"
+  config.vm.box = "debian/bullseye64"
   config.vm.define "mail" do |mail|
     mail.vm.hostname = "mail"
     mail.vm.network "private_network", ip: "192.168.57.10"
+    mail.vm.network "public_network",  ip: "192.168.56.10", bridge: "enp3s0"
     mail.vm.provision "shell", inline: <<-SHELL
-      apt update && apt upgrade -y
+      apt-get update && apt-get upgrade -y
       #Instalar paquetes
 
       apt-get install bind9 -y
       apt-get install apache2 -y
-      apt-get install php libapache2-mod-php -y
+      apt-get install php7.4 libapache2-mod-php7.4 -y
       apt-get install dovecot-core dovecot-imapd dovecot-pop3d -y
-
+      #Activar PHP
+      a2enmod php7.4
 
       #Copiar ficheros DNS
 
@@ -33,7 +35,7 @@ Vagrant.configure("2") do |config|
       chown www-data:www-data /var/local/squirrelmail/data
       mkdir -p /var/local/squirrelmail/attach
       chown www-data:www-data /var/local/squirrelmail/attach
-      cp -v /vagrant/webmail/config.php /usr/local/squirrelmail-webmail-1.4.22/config/config.php
+      cp -v /vagrant/webmail/config.php /usr/local/squirrelmail-webmail-1.4.22/config/
       cp -r /usr/local/squirrelmail-webmail-1.4.22/ /var/www/mail/
 
       #Cambiar el idioma
@@ -56,6 +58,10 @@ Vagrant.configure("2") do |config|
       a2ensite mail
       a2dissite 000-default
       systemctl restart apache2
+
+      #Añadir usuario
+      useradd -m -s /bin/bash -p $(openssl passwd -1 alvaro) alvaro
+      useradd -m -s /bin/bash -p $(openssl passwd -1 mengano) mengano
   SHELL
   end
 end
