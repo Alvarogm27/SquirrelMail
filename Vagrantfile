@@ -8,15 +8,25 @@ Vagrant.configure("2") do |config|
     mail.vm.network "private_network", ip: "192.168.57.10"
     mail.vm.network "public_network",  ip: "192.168.56.10", bridge: "enp3s0"
     mail.vm.provision "shell", inline: <<-SHELL
+
       apt-get update && apt-get upgrade -y
       #Instalar paquetes
 
-      apt-get install bind9 -y
-      apt-get install apache2 -y
-      apt-get install php7.4 libapache2-mod-php7.4 -y
-      apt-get install dovecot-core dovecot-imapd dovecot-pop3d -y
+      apt-get install bind9 -y \
+      apache2 -y \
+      php7.4 libapache2-mod-php7.4 -y \
+      dovecot-core dovecot-imapd dovecot-pop3d -y \
+      debconf -y 
       #Activar PHP
       a2enmod php7.4
+
+      #Instalacion postfix con debconf
+      debconf-set-selections <<< "postfix postfix/mailname string aula.izv"
+      debconf-set-selections <<< "postfix postfix/main_mailer_type string 'internet site'"
+      apt-get install postfix -y
+      systemctl restart postfix
+      systemctl enable postfix
+
 
       #Copiar ficheros DNS
 
@@ -27,7 +37,6 @@ Vagrant.configure("2") do |config|
       cp -v /vagrant/dns/named.conf.options /etc/bind
 
       #Descargar SquirrelMail
-
 
       tar xvfz /vagrant/webmail/squirrelmail.tgz -C /usr/local
       ln -s /usr/local/squirrelmail-webmail-1.4.22 /var/www/mail
@@ -59,6 +68,11 @@ Vagrant.configure("2") do |config|
       a2dissite 000-default
       systemctl restart apache2
 
+      #Pasar archivos del dovecot
+      cp /vagrant/dovecot/10-auth.conf /etc/dovecot/conf.d/
+      cp /vagrant/dovecot/10-mail.conf /etc/dovecot/conf.d/
+      systemctl restart dovecot
+      systemctl enable dovecot
       #Añadir usuario
       useradd -m -s /bin/bash -p $(openssl passwd -1 alvaro) alvaro
       useradd -m -s /bin/bash -p $(openssl passwd -1 mengano) mengano
