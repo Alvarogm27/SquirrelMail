@@ -12,5 +12,3 @@ $TTL    86400
 ; Registros PTR (resolución inversa)
 
 10  IN  PTR mail.aula.izv.
-
-@   IN  MX 10   mail.aula.izv

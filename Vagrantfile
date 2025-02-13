@@ -12,10 +12,10 @@ Vagrant.configure("2") do |config|
       apt-get update && apt-get upgrade -y
       #Instalar paquetes
 
-      apt-get install bind9 -y \
-      apache2 -y \
-      php7.4 libapache2-mod-php7.4 -y \
-      dovecot-core dovecot-imapd dovecot-pop3d -y \
+      apt-get install bind9 \
+      apache2 \
+      php7.4 libapache2-mod-php7.4 \
+      dovecot-core dovecot-imapd dovecot-pop3d \
       debconf -y 
       #Activar PHP
       a2enmod php7.4
@@ -32,7 +32,7 @@ Vagrant.configure("2") do |config|
 
       cp -v /vagrant/dns/named /etc/default/
       cp -v /vagrant/dns/db.56.168.192 /etc/bind/
-      cp -v /vagrant/dns/db.izv.test /etc/bind/
+      cp -v /vagrant/dns/db.aula.izv /etc/bind/
       cp -v /vagrant/dns/named.conf.local /etc/bind
       cp -v /vagrant/dns/named.conf.options /etc/bind
 
