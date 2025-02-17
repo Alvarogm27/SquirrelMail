@@ -30,11 +30,11 @@ Vagrant.configure("2") do |config|
 
       #Copiar ficheros DNS
 
-      cp -v /vagrant/dns/named /etc/default/
-      cp -v /vagrant/dns/db.56.168.192 /etc/bind/
+      cp -v /vagrant/dns/named /etc/default/named
+      cp -v /vagrant/dns/db.57.168.192 /etc/bind/
       cp -v /vagrant/dns/db.aula.izv /etc/bind/
-      cp -v /vagrant/dns/named.conf.local /etc/bind
-      cp -v /vagrant/dns/named.conf.options /etc/bind
+      cp -v /vagrant/dns/named.conf.local /etc/bind/
+      cp -v /vagrant/dns/named.conf.options /etc/bind/
 
       #Descargar SquirrelMail
 
