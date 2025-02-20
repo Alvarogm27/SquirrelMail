@@ -1,4 +1,4 @@
-zone "aula.izv" {
+zone "aula.izv." {
     type master;
     file "/etc/bind/db.aula.izv";
 };

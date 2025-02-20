@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
 
       #Instalacion postfix con debconf
       debconf-set-selections <<< "postfix postfix/mailname string aula.izv"
-      debconf-set-selections <<< "postfix postfix/main_mailer_type string 'internet site'"
+      debconf-set-selections <<< "postfix postfix/main_mailer_type string 'localhost'"
       apt-get install postfix -y
       systemctl restart postfix
       systemctl enable postfix
@@ -40,7 +40,7 @@ Vagrant.configure("2") do |config|
 
       tar xvfz /vagrant/webmail/squirrelmail.tgz -C /usr/local
       ln -s /usr/local/squirrelmail-webmail-1.4.22 /var/www/mail
-      sudo mkdir -p /var/local/squirrelmail/data
+      mkdir -p /var/local/squirrelmail/data
       chown www-data:www-data /var/local/squirrelmail/data
       mkdir -p /var/local/squirrelmail/attach
       chown www-data:www-data /var/local/squirrelmail/attach
@@ -61,11 +61,11 @@ Vagrant.configure("2") do |config|
       cp -v /vagrant/postfix/main.cf /etc/postfix/
 
       #Configurar apache2 y habilitar modulos
-
+      a2dissite 000-default
       cp -v /vagrant/apache2/apache2.conf /etc/apache2/apache2.conf
       cp -v /vagrant/apache2/mail.conf /etc/apache2/sites-available/mail.conf
-      a2ensite mail
-      a2dissite 000-default
+      a2ensite mail.conf
+
       systemctl restart apache2
 
       #Pasar archivos del dovecot
@@ -73,6 +73,7 @@ Vagrant.configure("2") do |config|
       cp /vagrant/dovecot/10-mail.conf /etc/dovecot/conf.d/
       systemctl restart dovecot
       systemctl enable dovecot
+      systemctl restart bind9
       #Añadir usuario
       useradd -m -s /bin/bash -p $(openssl passwd -1 alvaro) alvaro
       useradd -m -s /bin/bash -p $(openssl passwd -1 mengano) mengano

@@ -1,10 +1,12 @@
 $TTL 86400
-57.168.192.in-addr.arpa       IN      SOA     ns1.aula.izv. root.aula.izv. (
+@       IN      SOA     aula.izv. admin.aula.izv. (
                   2025012901 ; Serial
                   3600       ; Refresh
                   1800       ; Retry
                   1209600    ; Expire
                   86400 )    ; Minimum TTL
 
-57.168.192.in-addr.arpa IN NS mail.aula.izv.
-10.57.168.192.in-addr.arpa IN PTR mail.aula.izv.
+@       IN      NS      mail.aula.izv.
+10      IN      PTR     mail.aula.izv.
+
+
