@@ -3,8 +3,8 @@
 
 Vagrant.configure("2") do |config|
   config.vm.box = "debian/bullseye64"
-  config.vm.define "mail" do |mail|
-    mail.vm.hostname = "mail"
+  config.vm.define "mail.aula.izv" do |mail|
+    mail.vm.hostname = "mail.aula.izv"
     mail.vm.network "private_network", ip: "192.168.57.10"
     mail.vm.network "public_network",  ip: "192.168.56.10", bridge: "enp3s0"
     mail.vm.provision "shell", inline: <<-SHELL
@@ -70,9 +70,9 @@ Vagrant.configure("2") do |config|
 
       #Pasar archivos del dovecot
       cp /vagrant/dovecot/10-auth.conf /etc/dovecot/conf.d/
-      cp /vagrant/dovecot/10-mail.conf /etc/dovecot/conf.d/
+      cp /vagrant/dovecot/10-mail.conf /etc/dovecot/conf.d/ 
       systemctl restart dovecot
-      systemctl enable dovecot
+
       systemctl restart bind9
       #Añadir usuario
       useradd -m -s /bin/bash -p $(openssl passwd -1 alvaro) alvaro
