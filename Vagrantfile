@@ -71,7 +71,6 @@ Vagrant.configure("2") do |config|
       #Pasar archivos del dovecot
       cp /vagrant/dovecot/10-auth.conf /etc/dovecot/conf.d/
       cp /vagrant/dovecot/10-mail.conf /etc/dovecot/conf.d/ 
-      systemctl restart dovecot
 
       systemctl restart bind9
       #Añadir usuario
